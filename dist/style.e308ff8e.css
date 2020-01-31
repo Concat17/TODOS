@@ -1,0 +1,28 @@
+.list-of-penguins {
+    font-size: 100%;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+  } 
+  
+  .button {
+    color: #333;
+    display: inline-block;
+    width: 7.8em;
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.5em;
+    border: .06em solid #0066cc;
+  }
+  
+  .note{
+    position: absolute; 
+    width: 10%;
+    height: 30%;
+    background: rgb(240, 239, 180); 
+    border-radius: 10%;
+    border-width: 10px; 
+    border-color: red;
+    border: solid 1px ; 
+} 
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
