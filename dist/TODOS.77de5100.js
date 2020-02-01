@@ -117,79 +117,149 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"src/Model.ts":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* eslint-disable comma-dangle */
+
+/* eslint-disable quotes */
+
+var TodoModel = function TodoModel() {
+  this.notes = [{
+    text: "Click me!",
+    color: "red"
+  }, {
+    text: "Hello!",
+    color: "blue"
+  }];
+  this.currentIndex = 0;
+};
+
+TodoModel.prototype.getTodo = function getTodo(fn) {
+  this.currenStIndex = this.currentIndex === 0 ? 1 : 0;
+  fn(this.notes[this.currentIndex]);
+};
+
+exports.default = TodoModel;
+},{}],"src/View.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var TodoView = function TodoView(element) {
+  this.element = element;
+  this.onClickGetTodo = null;
+  this.onMouseDown = null;
+};
+
+TodoView.prototype.render = function render(todoData) {
+  this.element.innerHTML = "<h3>" + "Todo" + "</h3>" + "<div id=\"click_button\" class=\"note\" >" + todoData.text + "</div>";
+  var clickButton = this.element.querySelector("#click_button");
+  clickButton.addEventListener("click", this.onClickGetTodo);
+  clickButton.addEventListener("mousedown", this.onMouseDown);
+  clickButton.style.background = todoData.color;
+};
+
+TodoView.prototype.MoveNote = function MoveNote(e) {
+  var note = document.elementFromPoint(e.clientX, e.clientY);
+  var shiftX = e.clientX - note.getBoundingClientRect().left;
+  var shiftY = e.clientY - note.getBoundingClientRect().top;
+  note.style.position = "absolute";
+  note.style.zIndex = "1000"; // переместим в body, чтобы мяч был точно не внутри position:relative
+
+  document.body.append(note); // и установим абсолютно спозиционированный мяч под курсор
+
+  function moveAt(pageX, pageY) {
+    note.style.left = pageX - shiftX + "px";
+    note.style.top = pageY - shiftY + "px";
   }
 
-  return bundleURL;
-}
+  moveAt(e.pageX, e.pageY); // передвинуть мяч под координаты курсора
+  // и сдвинуть на половину ширины/высоты для центрирования
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+  function onMouseMove(event) {
+    moveAt(event.pageX, event.pageY); // note.hidden = true;
+    // const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+    // note.hidden = false;
+    // if (!elemBelow) return;
+  } // (3) перемещать по экрану
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
 
-  return '/';
-}
+  document.addEventListener("mousemove", onMouseMove); // (4) положить мяч, удалить более ненужные обработчики событий
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
+  note.onmouseup = function onMouseUp() {
+    document.removeEventListener("mousemove", onMouseMove);
+    note.onmouseup = null;
   };
+};
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
+exports.default = TodoView;
+},{}],"src/Controller.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Model_1 = __importDefault(require("./Model"));
+
+var View_1 = __importDefault(require("./View"));
+
+var TodoController = function TodoController(todoView, todoModel) {
+  this.todoView = todoView;
+  this.todoModel = todoModel;
+};
+
+TodoController.prototype.initialize = function initialize() {
+  this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
+  this.todoView.onMouseDown = this.onMouseDown.bind(this);
+  this.todoModel.getTodo(this.showTodo.bind(this));
+};
+
+TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
+  this.todoModel.getTodo(this.showTodo.bind(this));
+};
+
+TodoController.prototype.onMouseDown = function onMouseDown(e) {
+  this.todoView.MoveNote(e);
+};
+
+TodoController.prototype.showTodo = function showTodo(todoData) {
+  this.todoView.render(todoData);
+};
+
+function start() {
+  var todoModel = new Model_1.default();
+  var targetElement = document.getElementById("listOfPenguins");
+  var todoView = new View_1.default(targetElement);
+  var controller = new TodoController(todoView, todoModel);
+  controller.initialize();
 }
 
-var cssTimeout = null;
+exports.start = start;
+exports.default = start;
+},{"./Model":"src/Model.ts","./View":"src/View.ts"}],"index.ts":[function(require,module,exports) {
+"use strict";
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
+var Controller_1 = require("./src/Controller");
 
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+Controller_1.start();
+},{"./src/Controller":"src/Controller.ts"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +463,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.ts"], null)
+//# sourceMappingURL=/TODOS.77de5100.js.map

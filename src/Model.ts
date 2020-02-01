@@ -1,4 +1,6 @@
-export let TodoModel = function TodoModel() {
+/* eslint-disable comma-dangle */
+/* eslint-disable quotes */
+const TodoModel = function TodoModel() {
   this.notes = [
     {
       text: "Click me!",
@@ -13,6 +15,7 @@ export let TodoModel = function TodoModel() {
 };
 
 TodoModel.prototype.getTodo = function getTodo(fn) {
-  this.currentIndex = this.currentIndex === 0 ? 1 : 0;
+  this.currenStIndex = this.currentIndex === 0 ? 1 : 0;
   fn(this.notes[this.currentIndex]);
 };
+export default TodoModel;

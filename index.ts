@@ -1,3 +1,3 @@
-import { start } from "./Controller.js";
+import { start } from "./src/Controller";
 
 start();

@@ -117,79 +117,142 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"Model.js":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoModel = void 0;
+
+var TodoModel = function TodoModel() {
+  this.notes = [{
+    text: "Click me!",
+    color: "red"
+  }, {
+    text: "Hello!",
+    color: "blue"
+  }];
+  this.currentIndex = 0;
+};
+
+exports.TodoModel = TodoModel;
+
+TodoModel.prototype.getTodo = function getTodo(fn) {
+  this.currenStIndex = this.currentIndex === 0 ? 1 : 0;
+  fn(this.notes[this.currentIndex]);
+};
+
+alert("fdfdf");
+},{}],"View.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoView = void 0;
+
+var TodoView = function TodoView(element) {
+  this.element = element;
+  this.onClickGetTodo = null;
+  this.onMouseDown = null;
+};
+
+exports.TodoView = TodoView;
+
+TodoView.prototype.render = function render(todoData) {
+  this.element.innerHTML = "<h3>" + "Todo" + "</h3>" + "<button id=\"click_button\" class=\"note\" type=\"button\">" + todoData.text + "</button>";
+  var click_button = this.element.querySelector("#click_button");
+  click_button.addEventListener("click", this.onClickGetTodo);
+  click_button.addEventListener("mousedown", this.onMouseDown);
+  click_button.style.background = todoData.color;
+};
+
+TodoView.prototype.MoveNote = function MoveNote(e) {
+  var note = document.elementFromPoint(e.clientX, e.clientY);
+  var shiftX = e.clientX - note.getBoundingClientRect().left;
+  var shiftY = e.clientY - note.getBoundingClientRect().top;
+  note.style.position = "absolute";
+  note.style.zIndex = 1000; // переместим в body, чтобы мяч был точно не внутри position:relative
+
+  document.body.append(note); // и установим абсолютно спозиционированный мяч под курсор
+
+  moveAt(e.pageX, e.pageY); // передвинуть мяч под координаты курсора
+  // и сдвинуть на половину ширины/высоты для центрирования
+
+  function moveAt(pageX, pageY) {
+    note.style.left = pageX - shiftX + "px";
+    note.style.top = pageY - shiftY + "px";
   }
 
-  return bundleURL;
-}
+  function onMouseMove(event) {
+    moveAt(event.pageX, event.pageY);
+    note.hidden = true;
+    var elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+    note.hidden = false;
+    if (!elemBelow) return;
+  } // (3) перемещать по экрану
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+  document.addEventListener("mousemove", onMouseMove); // (4) положить мяч, удалить более ненужные обработчики событий
 
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
+  note.onmouseup = function () {
+    document.removeEventListener("mousemove", onMouseMove);
+    note.onmouseup = null;
   };
+};
+},{}],"Controller.js":[function(require,module,exports) {
+"use strict";
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.start = start;
 
-var cssTimeout = null;
+var _Model = require("./Model.js");
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
+var _View = require("./View.js");
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
+var TodoController = function TodoController(todoView, todoModel) {
+  this.todoView = todoView;
+  this.todoModel = todoModel;
+};
 
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
+TodoController.prototype.initialize = function initialize() {
+  this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
+  this.todoView.onMouseDown = this.onMouseDown.bind(this);
+  this.todoModel.getTodo(this.showTodo.bind(this));
+};
 
-    cssTimeout = null;
-  }, 50);
-}
+TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
+  this.todoModel.getTodo(this.showTodo.bind(this));
+};
 
-module.exports = reloadCSS;
-},{"./bundle-url":"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
+TodoController.prototype.onMouseDown = function onMouseDown(e) {
+  var foo = e.clientX;
+  this.todoView.MoveNote(e);
+};
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+TodoController.prototype.showTodo = function showTodo(todoData) {
+  this.todoView.render(todoData);
+};
+
+function start() {
+  var todoModel = new _Model.TodoModel();
+  var targetElement = document.getElementById("listOfPenguins");
+  var todoView = new _View.TodoView(targetElement);
+  var controller = new TodoController(todoView, todoModel);
+  controller.initialize();
+} // controller.onClickGetTodo({
+//   currentTarget: { dataset: { penguinIndex: 0 } }
+// });
+},{"./Model.js":"Model.js","./View.js":"View.js"}],"index.js":[function(require,module,exports) {
+"use strict";
+
+var _Controller = require("./Controller");
+
+(0, _Controller.start)();
+},{"./Controller":"Controller.js"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -217,7 +280,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45041" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36815" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -393,5 +456,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
+//# sourceMappingURL=/TODOS.e31bb0bc.js.map

@@ -1,4 +1,4 @@
-export let TodoView = function TodoView(element) {
+const TodoView = function TodoView(element) {
   this.element = element;
 
   this.onClickGetTodo = null;
@@ -10,52 +10,55 @@ TodoView.prototype.render = function render(todoData) {
     "<h3>" +
     "Todo" +
     "</h3>" +
-    `<button id="click_button" class="note" type="button">` +
+    `<div id="click_button" class="note" >` +
     todoData.text +
-    "</button>";
+    "</div>";
 
-  var click_button = this.element.querySelector("#click_button");
-  click_button.addEventListener("click", this.onClickGetTodo);
-  click_button.addEventListener("mousedown", this.onMouseDown);
-  click_button.style.background = todoData.color;
+  const clickButton = this.element.querySelector("#click_button");
+  clickButton.addEventListener("click", this.onClickGetTodo);
+  clickButton.addEventListener("mousedown", this.onMouseDown);
+  clickButton.style.background = todoData.color;
 };
 
 TodoView.prototype.MoveNote = function MoveNote(e) {
-  let note = document.elementFromPoint(e.clientX, e.clientY);
-  let shiftX = e.clientX - note.getBoundingClientRect().left;
-  let shiftY = e.clientY - note.getBoundingClientRect().top;
+  const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+  const shiftX = e.clientX - note.getBoundingClientRect().left;
+  const shiftY = e.clientY - note.getBoundingClientRect().top;
 
   note.style.position = "absolute";
-  note.style.zIndex = 1000;
+  note.style.zIndex = "1000";
   // переместим в body, чтобы мяч был точно не внутри position:relative
   document.body.append(note);
   // и установим абсолютно спозиционированный мяч под курсор
+
+  function moveAt(pageX: number, pageY: number) {
+    note.style.left = `${pageX - shiftX}px`;
+    note.style.top = `${pageY - shiftY}px`;
+  }
 
   moveAt(e.pageX, e.pageY);
 
   // передвинуть мяч под координаты курсора
   // и сдвинуть на половину ширины/высоты для центрирования
-  function moveAt(pageX, pageY) {
-    note.style.left = pageX - shiftX + "px";
-    note.style.top = pageY - shiftY + "px";
-  }
 
   function onMouseMove(event) {
     moveAt(event.pageX, event.pageY);
 
-    note.hidden = true;
-    let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-    note.hidden = false;
+    // note.hidden = true;
+    // const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+    // note.hidden = false;
 
-    if (!elemBelow) return;
+    // if (!elemBelow) return;
   }
 
   // (3) перемещать по экрану
   document.addEventListener("mousemove", onMouseMove);
 
   // (4) положить мяч, удалить более ненужные обработчики событий
-  note.onmouseup = function() {
+  note.onmouseup = function onMouseUp() {
     document.removeEventListener("mousemove", onMouseMove);
     note.onmouseup = null;
   };
 };
+
+export default TodoView;

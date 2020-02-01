@@ -1,7 +1,7 @@
-import { TodoModel } from "./Model.js";
-import { TodoView } from "./View.js";
+import TodoModel from "./Model";
+import TodoView from "./View";
 
-var TodoController = function TodoController(todoView, todoModel) {
+const TodoController = function TodoController(todoView, todoModel) {
   this.todoView = todoView;
   this.todoModel = todoModel;
 };
@@ -17,7 +17,6 @@ TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
 };
 
 TodoController.prototype.onMouseDown = function onMouseDown(e) {
-  let foo = e.clientX;
   this.todoView.MoveNote(e);
 };
 
@@ -26,16 +25,14 @@ TodoController.prototype.showTodo = function showTodo(todoData) {
 };
 
 export function start() {
-  var todoModel = new TodoModel();
+  const todoModel = new TodoModel();
 
-  var targetElement = document.getElementById("listOfPenguins");
-  var todoView = new TodoView(targetElement);
+  const targetElement = document.getElementById("listOfPenguins");
+  const todoView = new TodoView(targetElement);
 
-  var controller = new TodoController(todoView, todoModel);
+  const controller = new TodoController(todoView, todoModel);
 
   controller.initialize();
 }
 
-// controller.onClickGetTodo({
-//   currentTarget: { dataset: { penguinIndex: 0 } }
-// });
+export default start;
