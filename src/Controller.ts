@@ -20,7 +20,7 @@ TodoController.prototype.onMouseDown = function onMouseDown(e) {
   this.todoView.MoveNote(e);
 };
 
-TodoController.prototype.showTodo = function showTodo(todoData) {
+TodoController.prototype.showTodo = function showTodo(todoData): void {
   this.todoView.render(todoData);
 };
 

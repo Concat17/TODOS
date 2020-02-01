@@ -123,24 +123,37 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/* eslint-disable comma-dangle */
-
-/* eslint-disable quotes */
 
 var TodoModel = function TodoModel() {
-  this.notes = [{
-    text: "Click me!",
-    color: "red"
-  }, {
-    text: "Hello!",
-    color: "blue"
-  }];
+  this.notes = [];
   this.currentIndex = 0;
 };
 
+TodoModel.prototype.addNote = function addNote() {
+  var Note = function Note() {
+    this.name = "Note";
+    this.creation_data = "222";
+    this.todos = [];
+  };
+
+  Note.prototype.addTodo = function addTodo() {
+    var todo = {
+      name: "1",
+      content: "Hi",
+      priority: "Low"
+    };
+    this.todos.push(todo);
+  };
+
+  var note = new Note();
+  note.addTodo();
+  this.notes.push(note);
+};
+
 TodoModel.prototype.getTodo = function getTodo(fn) {
-  this.currenStIndex = this.currentIndex === 0 ? 1 : 0;
-  fn(this.notes[this.currentIndex]);
+  this.addNote(); // this.addTodo(this.notes[0]);
+
+  fn(this.notes[this.currentIndex]); // FIXME:
 };
 
 exports.default = TodoModel;
@@ -158,44 +171,51 @@ var TodoView = function TodoView(element) {
 };
 
 TodoView.prototype.render = function render(todoData) {
-  this.element.innerHTML = "<h3>" + "Todo" + "</h3>" + "<div id=\"click_button\" class=\"note\" >" + todoData.text + "</div>";
+  // TODO: Generation todos via css grid
+  this.element.innerHTML = "<div id=\"click_button\" class=\"note\">\n  <div class=\"note_name\">" + todoData.name + "</div>\n  <div class=\"note_todos\"><div> \n  </div>"; // "<h3>" +
+  // "Todo" +
+  // "</h3>" +
+  // `<div id="click_button" class="note" >` +
+  // todoData.text +
+  // "</div>";
+
   var clickButton = this.element.querySelector("#click_button");
   clickButton.addEventListener("click", this.onClickGetTodo);
   clickButton.addEventListener("mousedown", this.onMouseDown);
   clickButton.style.background = todoData.color;
 };
 
-TodoView.prototype.MoveNote = function MoveNote(e) {
-  var note = document.elementFromPoint(e.clientX, e.clientY);
-  var shiftX = e.clientX - note.getBoundingClientRect().left;
-  var shiftY = e.clientY - note.getBoundingClientRect().top;
-  note.style.position = "absolute";
-  note.style.zIndex = "1000"; // переместим в body, чтобы мяч был точно не внутри position:relative
+function addNote() {}
 
-  document.body.append(note); // и установим абсолютно спозиционированный мяч под курсор
-
-  function moveAt(pageX, pageY) {
-    note.style.left = pageX - shiftX + "px";
-    note.style.top = pageY - shiftY + "px";
-  }
-
-  moveAt(e.pageX, e.pageY); // передвинуть мяч под координаты курсора
-  // и сдвинуть на половину ширины/высоты для центрирования
-
-  function onMouseMove(event) {
-    moveAt(event.pageX, event.pageY); // note.hidden = true;
-    // const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-    // note.hidden = false;
-    // if (!elemBelow) return;
-  } // (3) перемещать по экрану
-
-
-  document.addEventListener("mousemove", onMouseMove); // (4) положить мяч, удалить более ненужные обработчики событий
-
-  note.onmouseup = function onMouseUp() {
-    document.removeEventListener("mousemove", onMouseMove);
-    note.onmouseup = null;
-  };
+TodoView.prototype.MoveNote = function MoveNote(e) {// const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+  // const shiftX = e.clientX - note.getBoundingClientRect().left;
+  // const shiftY = e.clientY - note.getBoundingClientRect().top;
+  // note.style.position = "absolute";
+  // note.style.zIndex = "1000";
+  // // переместим в body, чтобы мяч был точно не внутри position:relative
+  // document.body.append(note);
+  // // и установим абсолютно спозиционированный мяч под курсор
+  // function moveAt(pageX: number, pageY: number) {
+  //   note.style.left = `${pageX - shiftX}px`;
+  //   note.style.top = `${pageY - shiftY}px`;
+  // } // TODO:
+  // moveAt(e.pageX, e.pageY);
+  // // передвинуть мяч под координаты курсора
+  // // и сдвинуть на половину ширины/высоты для центрирования
+  // function onMouseMove(event) {
+  //   moveAt(event.pageX, event.pageY);
+  //   // note.hidden = true;
+  //   // const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+  //   // note.hidden = false;
+  //   // if (!elemBelow) return;
+  // }
+  // // (3) перемещать по экрану
+  // document.addEventListener("mousemove", onMouseMove);
+  // // (4) положить мяч, удалить более ненужные обработчики событий
+  // note.onmouseup = function onMouseUp() {
+  //   document.removeEventListener("mousemove", onMouseMove);
+  //   note.onmouseup = null;
+  // };
 };
 
 exports.default = TodoView;
