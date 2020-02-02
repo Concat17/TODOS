@@ -6,13 +6,13 @@ const TodoModel = function TodoModel() {
 TodoModel.prototype.addNote = function addNote() {
   const Note = function Note() {
     this.name = "Note";
-    this.creation_data = "222";
+    this.creation_data = TodoModel.prototype.getCurrentDate();
     this.todos = [];
   };
 
   Note.prototype.addTodo = function addTodo(): void {
     const todo = {
-      name: "1",
+      name: "Todo",
       content: "Hi",
       priority: "Low"
     };
@@ -23,10 +23,17 @@ TodoModel.prototype.addNote = function addNote() {
   this.notes.push(note);
 };
 
-TodoModel.prototype.getTodo = function getTodo(fn: (note) => void) {
-  this.addNote();
-  // this.addTodo(this.notes[0]);
-  fn(this.notes[this.currentIndex]); // FIXME:
+TodoModel.prototype.getNoteData = function getNoteData(index: number): object {
+  return this.notes[index]; // FIXME:
+};
+
+TodoModel.prototype.getCurrentDate = function getCurrentDate(): string {
+  const today = new Date();
+  const dd = String(today.getDate());
+  const mm = String(today.getMonth() + 1);
+  const yyyy = today.getFullYear();
+
+  return `${dd}.${mm}.${yyyy}`; // (today = mm + "/" + dd + "/" + yyyy);
 };
 
 export default TodoModel;

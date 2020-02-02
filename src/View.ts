@@ -7,7 +7,7 @@ const TodoView = function TodoView(element) {
 
 TodoView.prototype.render = function render(todoData) {
   // TODO: Generation todos via css grid
-  this.element.innerHTML = `<div id="click_button" class="note">
+  this.element.innerHTML = `<div id="click_button" class="note" data-index="1">
   <div class="note_name">${todoData.name}</div>
   <div class="note_todos"><div> 
   </div>`;

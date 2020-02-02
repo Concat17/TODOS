@@ -132,13 +132,13 @@ var TodoModel = function TodoModel() {
 TodoModel.prototype.addNote = function addNote() {
   var Note = function Note() {
     this.name = "Note";
-    this.creation_data = "222";
+    this.creation_data = TodoModel.prototype.getCurrentDate();
     this.todos = [];
   };
 
   Note.prototype.addTodo = function addTodo() {
     var todo = {
-      name: "1",
+      name: "Todo",
       content: "Hi",
       priority: "Low"
     };
@@ -150,10 +150,16 @@ TodoModel.prototype.addNote = function addNote() {
   this.notes.push(note);
 };
 
-TodoModel.prototype.getTodo = function getTodo(fn) {
-  this.addNote(); // this.addTodo(this.notes[0]);
+TodoModel.prototype.getNoteData = function getNoteData(index) {
+  return this.notes[index]; // FIXME:
+};
 
-  fn(this.notes[this.currentIndex]); // FIXME:
+TodoModel.prototype.getCurrentDate = function getCurrentDate() {
+  var today = new Date();
+  var dd = String(today.getDate());
+  var mm = String(today.getMonth() + 1);
+  var yyyy = today.getFullYear();
+  return dd + "." + mm + "." + yyyy; // (today = mm + "/" + dd + "/" + yyyy);
 };
 
 exports.default = TodoModel;
@@ -172,7 +178,7 @@ var TodoView = function TodoView(element) {
 
 TodoView.prototype.render = function render(todoData) {
   // TODO: Generation todos via css grid
-  this.element.innerHTML = "<div id=\"click_button\" class=\"note\">\n  <div class=\"note_name\">" + todoData.name + "</div>\n  <div class=\"note_todos\"><div> \n  </div>"; // "<h3>" +
+  this.element.innerHTML = "<div id=\"click_button\" class=\"note\" data-index=\"1\">\n  <div class=\"note_name\">" + todoData.name + "</div>\n  <div class=\"note_todos\"><div> \n  </div>"; // "<h3>" +
   // "Todo" +
   // "</h3>" +
   // `<div id="click_button" class="note" >` +
@@ -244,11 +250,16 @@ var TodoController = function TodoController(todoView, todoModel) {
 TodoController.prototype.initialize = function initialize() {
   this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
   this.todoView.onMouseDown = this.onMouseDown.bind(this);
-  this.todoModel.getTodo(this.showTodo.bind(this));
+  this.todoModel.addNote();
+  var note = this.todoModel.getNoteData(0);
+  this.showTodo(note); //this.todoModel.getTodoData(this.showTodo.bind(this));
 };
 
 TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
-  this.todoModel.getTodo(this.showTodo.bind(this));
+  var a = e.currentTarget;
+  var f = parseInt(a.dataset.index, 10);
+  var note = this.todoModel.getNoteData(0);
+  this.todoView.render(note); //this.todoModel.getTodoData(this.showTodo.bind(this));
 };
 
 TodoController.prototype.onMouseDown = function onMouseDown(e) {
@@ -307,7 +318,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45041" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38091" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

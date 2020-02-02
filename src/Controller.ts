@@ -9,11 +9,18 @@ const TodoController = function TodoController(todoView, todoModel) {
 TodoController.prototype.initialize = function initialize() {
   this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
   this.todoView.onMouseDown = this.onMouseDown.bind(this);
-  this.todoModel.getTodo(this.showTodo.bind(this));
+  this.todoModel.addNote();
+  let note = this.todoModel.getNoteData(0);
+  this.showTodo(note);
+  //this.todoModel.getTodoData(this.showTodo.bind(this));
 };
 
 TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
-  this.todoModel.getTodo(this.showTodo.bind(this));
+  let a = e.currentTarget;
+  let f = parseInt(a.dataset.index, 10);
+  let note = this.todoModel.getNoteData(0);
+  this.todoView.render(note);
+  //this.todoModel.getTodoData(this.showTodo.bind(this));
 };
 
 TodoController.prototype.onMouseDown = function onMouseDown(e) {
