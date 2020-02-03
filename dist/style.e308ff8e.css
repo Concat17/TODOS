@@ -1,23 +1,7 @@
 body{
   background-color: #333;
 }
-
-.list-of-penguins {
-  font-size: 100%;
-  font-family: "Roboto", sans-serif;
-  color: #333;
-}
-
-.button {
-  color: #333;
-  display: inline-block;
-  width: 7.8em;
-  text-decoration: none;
-  text-align: center;
-  line-height: 1.5em;
-  border: 0.06em solid #0066cc;
-}
-
+  
 .note {
   position: absolute;
   width: 10%;
@@ -37,5 +21,15 @@ body{
   border: solid 1px;
 }
 
+.note_todos{
+  display: grid;
+}
+
+.todo_name{
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+  height: 10%;  
+}
 
 /*# sourceMappingURL=/style.e308ff8e.css.map */

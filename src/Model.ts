@@ -14,17 +14,19 @@ TodoModel.prototype.addNote = function addNote() {
     const todo = {
       name: "Todo",
       content: "Hi",
-      priority: "Low"
+      priority: "Low" // TODO: rewrite as enum
     };
     this.todos.push(todo);
   };
   const note = new Note();
   note.addTodo();
+  note.addTodo();
+  note.addTodo();
   this.notes.push(note);
 };
 
 TodoModel.prototype.getNoteData = function getNoteData(index: number): object {
-  return this.notes[index]; // FIXME:
+  return this.notes[index];
 };
 
 TodoModel.prototype.getCurrentDate = function getCurrentDate(): string {
@@ -33,7 +35,7 @@ TodoModel.prototype.getCurrentDate = function getCurrentDate(): string {
   const mm = String(today.getMonth() + 1);
   const yyyy = today.getFullYear();
 
-  return `${dd}.${mm}.${yyyy}`; // (today = mm + "/" + dd + "/" + yyyy);
+  return `${dd}.${mm}.${yyyy}`;
 };
 
 export default TodoModel;

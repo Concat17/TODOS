@@ -140,18 +140,21 @@ TodoModel.prototype.addNote = function addNote() {
     var todo = {
       name: "Todo",
       content: "Hi",
-      priority: "Low"
+      priority: "Low" // TODO: rewrite as enum
+
     };
     this.todos.push(todo);
   };
 
   var note = new Note();
   note.addTodo();
+  note.addTodo();
+  note.addTodo();
   this.notes.push(note);
 };
 
 TodoModel.prototype.getNoteData = function getNoteData(index) {
-  return this.notes[index]; // FIXME:
+  return this.notes[index];
 };
 
 TodoModel.prototype.getCurrentDate = function getCurrentDate() {
@@ -159,7 +162,7 @@ TodoModel.prototype.getCurrentDate = function getCurrentDate() {
   var dd = String(today.getDate());
   var mm = String(today.getMonth() + 1);
   var yyyy = today.getFullYear();
-  return dd + "." + mm + "." + yyyy; // (today = mm + "/" + dd + "/" + yyyy);
+  return dd + "." + mm + "." + yyyy;
 };
 
 exports.default = TodoModel;
@@ -178,50 +181,56 @@ var TodoView = function TodoView(element) {
 
 TodoView.prototype.render = function render(todoData) {
   // TODO: Generation todos via css grid
-  this.element.innerHTML = "<div id=\"click_button\" class=\"note\" data-index=\"1\">\n  <div class=\"note_name\">" + todoData.name + "</div>\n  <div class=\"note_todos\"><div> \n  </div>"; // "<h3>" +
-  // "Todo" +
-  // "</h3>" +
-  // `<div id="click_button" class="note" >` +
-  // todoData.text +
-  // "</div>";
-
+  this.element.innerHTML = "<div id=\"click_button\" class=\"note\" data-index=\"1\">\n  <div class=\"note_name\">" + todoData.name + "</div>\n  <div class=\"note_todos\">" + this.generateTodos(todoData.todos) + "<div> \n  </div>";
   var clickButton = this.element.querySelector("#click_button");
   clickButton.addEventListener("click", this.onClickGetTodo);
   clickButton.addEventListener("mousedown", this.onMouseDown);
   clickButton.style.background = todoData.color;
 };
 
-function addNote() {}
+TodoView.prototype.generateTodos = function generateTodos(todos) {
+  var res = "";
 
-TodoView.prototype.MoveNote = function MoveNote(e) {// const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-  // const shiftX = e.clientX - note.getBoundingClientRect().left;
-  // const shiftY = e.clientY - note.getBoundingClientRect().top;
-  // note.style.position = "absolute";
-  // note.style.zIndex = "1000";
-  // // переместим в body, чтобы мяч был точно не внутри position:relative
-  // document.body.append(note);
-  // // и установим абсолютно спозиционированный мяч под курсор
-  // function moveAt(pageX: number, pageY: number) {
-  //   note.style.left = `${pageX - shiftX}px`;
-  //   note.style.top = `${pageY - shiftY}px`;
-  // } // TODO:
-  // moveAt(e.pageX, e.pageY);
-  // // передвинуть мяч под координаты курсора
-  // // и сдвинуть на половину ширины/высоты для центрирования
-  // function onMouseMove(event) {
-  //   moveAt(event.pageX, event.pageY);
-  //   // note.hidden = true;
-  //   // const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-  //   // note.hidden = false;
-  //   // if (!elemBelow) return;
-  // }
-  // // (3) перемещать по экрану
-  // document.addEventListener("mousemove", onMouseMove);
-  // // (4) положить мяч, удалить более ненужные обработчики событий
-  // note.onmouseup = function onMouseUp() {
-  //   document.removeEventListener("mousemove", onMouseMove);
-  //   note.onmouseup = null;
-  // };
+  for (var _i = 0, todos_1 = todos; _i < todos_1.length; _i++) {
+    var todo = todos_1[_i];
+    res += this.todoToHtml(todo);
+  }
+
+  return res; // FIXME: return todos.reduce((t1, t2) => this.todoToHtml(t2) + this.todoToHtml(t2));
+};
+
+TodoView.prototype.todoToHtml = function todoToHtml(todo) {
+  return "<div class=\"todo_name\">" + todo.name + "</div>";
+}; // TODO: Add addNote method
+
+
+TodoView.prototype.MoveNote = function MoveNote(e) {
+  // FIXME:
+  var note = document.elementFromPoint(e.clientX, e.clientY);
+  if (note.className !== "note") return;
+  var shiftX = e.clientX - note.getBoundingClientRect().left;
+  var shiftY = e.clientY - note.getBoundingClientRect().top;
+  note.style.position = "absolute";
+  note.style.zIndex = "1000";
+  document.body.append(note);
+
+  function moveAt(pageX, pageY) {
+    note.style.left = pageX - shiftX + "px";
+    note.style.top = pageY - shiftY + "px";
+  }
+
+  moveAt(e.pageX, e.pageY);
+
+  function onMouseMove(event) {
+    moveAt(event.pageX, event.pageY);
+  }
+
+  document.addEventListener("mousemove", onMouseMove);
+
+  note.onmouseup = function onMouseUp() {
+    document.removeEventListener("mousemove", onMouseMove);
+    note.onmouseup = null;
+  };
 };
 
 exports.default = TodoView;
@@ -248,19 +257,16 @@ var TodoController = function TodoController(todoView, todoModel) {
 };
 
 TodoController.prototype.initialize = function initialize() {
-  this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
+  //this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
   this.todoView.onMouseDown = this.onMouseDown.bind(this);
   this.todoModel.addNote();
   var note = this.todoModel.getNoteData(0);
   this.showTodo(note); //this.todoModel.getTodoData(this.showTodo.bind(this));
-};
+}; // TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
+//   //this.todoView.render(note);
+//   //this.todoModel.getTodoData(this.showTodo.bind(this));
+// };
 
-TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
-  var a = e.currentTarget;
-  var f = parseInt(a.dataset.index, 10);
-  var note = this.todoModel.getNoteData(0);
-  this.todoView.render(note); //this.todoModel.getTodoData(this.showTodo.bind(this));
-};
 
 TodoController.prototype.onMouseDown = function onMouseDown(e) {
   this.todoView.MoveNote(e);
@@ -272,7 +278,7 @@ TodoController.prototype.showTodo = function showTodo(todoData) {
 
 function start() {
   var todoModel = new Model_1.default();
-  var targetElement = document.getElementById("listOfPenguins");
+  var targetElement = document.getElementById("notes");
   var todoView = new View_1.default(targetElement);
   var controller = new TodoController(todoView, todoModel);
   controller.initialize();
@@ -318,7 +324,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38091" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38303" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
