@@ -3,7 +3,12 @@ module.exports = {
     browser: true,
     es6: true
   },
-  extends: ["airbnb-base", "prettier"],
+  extends: [
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-base",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
@@ -31,6 +36,7 @@ module.exports = {
         ts: "never",
         tsx: "never"
       }
-    ]
+    ],
+    "lines-between-class-members": "off"
   }
 };

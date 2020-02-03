@@ -1,5 +1,5 @@
-import TodoModel from "./Model";
-import TodoView from "./View";
+import TodoModel from './Model/TodoModel';
+import TodoView from './View';
 
 const TodoController = function TodoController(todoView, todoModel) {
   this.todoView = todoView;
@@ -7,12 +7,12 @@ const TodoController = function TodoController(todoView, todoModel) {
 };
 
 TodoController.prototype.initialize = function initialize() {
-  //this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
+  // this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
   this.todoView.onMouseDown = this.onMouseDown.bind(this);
   this.todoModel.addNote();
   const note = this.todoModel.getNoteData(0);
   this.showTodo(note);
-  //this.todoModel.getTodoData(this.showTodo.bind(this));
+  // this.todoModel.getTodoData(this.showTodo.bind(this));
 };
 
 // TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {

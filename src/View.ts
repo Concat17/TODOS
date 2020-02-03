@@ -1,3 +1,5 @@
+import TodoModel from './Model/TodoModel';
+
 const TodoView = function TodoView(element) {
   this.element = element;
 
@@ -18,13 +20,10 @@ TodoView.prototype.render = function render(todoData) {
   clickButton.style.background = todoData.color;
 };
 
-TodoView.prototype.generateTodos = function generateTodos(todos): string {
-  let res = "";
-  for (let todo of todos) {
-    res += this.todoToHtml(todo);
-  }
-  return res;
-  // FIXME: return todos.reduce((t1, t2) => this.todoToHtml(t2) + this.todoToHtml(t2));
+TodoView.prototype.generateTodos = function generateTodos(
+  todos: TodoModel[]
+): string {
+  return todos.reduce((acc, todo) => acc + this.todoToHtml(todo), "");
 };
 
 TodoView.prototype.todoToHtml = function todoToHtml(todo): string {
