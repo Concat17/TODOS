@@ -117,26 +117,31 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/Model.ts":[function(require,module,exports) {
+})({"src/Model/Note.ts":[function(require,module,exports) {
 "use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var TodoModel = function TodoModel() {
-  this.notes = [];
-  this.currentIndex = 0;
-};
+var TodoModel_1 = __importDefault(require("./TodoModel"));
 
-TodoModel.prototype.addNote = function addNote() {
-  var Note = function Note() {
+var Note =
+/** @class */
+function () {
+  function Note() {
     this.name = "Note";
-    this.creation_data = TodoModel.prototype.getCurrentDate();
+    this.creationDate = TodoModel_1.default.getCurrentDate();
     this.todos = [];
-  };
+  }
 
-  Note.prototype.addTodo = function addTodo() {
+  Note.prototype.addTodo = function () {
     var todo = {
       name: "Todo",
       content: "Hi",
@@ -146,27 +151,60 @@ TodoModel.prototype.addNote = function addNote() {
     this.todos.push(todo);
   };
 
-  var note = new Note();
-  note.addTodo();
-  note.addTodo();
-  note.addTodo();
-  this.notes.push(note);
+  return Note;
+}();
+
+exports.default = Note;
+},{"./TodoModel":"src/Model/TodoModel.ts"}],"src/Model/TodoModel.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
 };
 
-TodoModel.prototype.getNoteData = function getNoteData(index) {
-  return this.notes[index];
-};
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-TodoModel.prototype.getCurrentDate = function getCurrentDate() {
-  var today = new Date();
-  var dd = String(today.getDate());
-  var mm = String(today.getMonth() + 1);
-  var yyyy = today.getFullYear();
-  return dd + "." + mm + "." + yyyy;
-};
+var Note_1 = __importDefault(require("./Note"));
+
+var TodoModel =
+/** @class */
+function () {
+  function TodoModel() {
+    this.notes = [];
+    this.currentIndex = 0;
+  }
+
+  TodoModel.prototype.addNote = function () {
+    var note = new Note_1.default();
+    note.addTodo();
+    note.addTodo();
+    note.addTodo();
+    this.notes.push(note);
+  };
+
+  TodoModel.prototype.getNoteData = function (index) {
+    return this.notes[index];
+  }; // this method doesn't use this so it must me static (or global - it's prefered)
+
+
+  TodoModel.getCurrentDate = function () {
+    var today = new Date();
+    var dd = today.getDate().toString(); // it's better to use toString() method (looks better)
+
+    var mm = (today.getMonth() + 1).toString();
+    var yyyy = today.getFullYear();
+    return dd + "." + mm + "." + yyyy;
+  };
+
+  return TodoModel;
+}();
 
 exports.default = TodoModel;
-},{}],"src/View.ts":[function(require,module,exports) {
+},{"./Note":"src/Model/Note.ts"}],"src/View.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -189,14 +227,11 @@ TodoView.prototype.render = function render(todoData) {
 };
 
 TodoView.prototype.generateTodos = function generateTodos(todos) {
-  var res = "";
+  var _this = this;
 
-  for (var _i = 0, todos_1 = todos; _i < todos_1.length; _i++) {
-    var todo = todos_1[_i];
-    res += this.todoToHtml(todo);
-  }
-
-  return res; // FIXME: return todos.reduce((t1, t2) => this.todoToHtml(t2) + this.todoToHtml(t2));
+  return todos.reduce(function (acc, todo) {
+    return acc + _this.todoToHtml(todo);
+  }, "");
 };
 
 TodoView.prototype.todoToHtml = function todoToHtml(todo) {
@@ -247,7 +282,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Model_1 = __importDefault(require("./Model"));
+var TodoModel_1 = __importDefault(require("./Model/TodoModel"));
 
 var View_1 = __importDefault(require("./View"));
 
@@ -257,11 +292,11 @@ var TodoController = function TodoController(todoView, todoModel) {
 };
 
 TodoController.prototype.initialize = function initialize() {
-  //this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
+  // this.todoView.onClickGetTodo = this.onClickGetTodo.bind(this);
   this.todoView.onMouseDown = this.onMouseDown.bind(this);
   this.todoModel.addNote();
   var note = this.todoModel.getNoteData(0);
-  this.showTodo(note); //this.todoModel.getTodoData(this.showTodo.bind(this));
+  this.showTodo(note); // this.todoModel.getTodoData(this.showTodo.bind(this));
 }; // TodoController.prototype.onClickGetTodo = function onClickGetTodo(e) {
 //   //this.todoView.render(note);
 //   //this.todoModel.getTodoData(this.showTodo.bind(this));
@@ -277,7 +312,7 @@ TodoController.prototype.showTodo = function showTodo(todoData) {
 };
 
 function start() {
-  var todoModel = new Model_1.default();
+  var todoModel = new TodoModel_1.default();
   var targetElement = document.getElementById("notes");
   var todoView = new View_1.default(targetElement);
   var controller = new TodoController(todoView, todoModel);
@@ -286,7 +321,7 @@ function start() {
 
 exports.start = start;
 exports.default = start;
-},{"./Model":"src/Model.ts","./View":"src/View.ts"}],"index.ts":[function(require,module,exports) {
+},{"./Model/TodoModel":"src/Model/TodoModel.ts","./View":"src/View.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -296,7 +331,7 @@ Object.defineProperty(exports, "__esModule", {
 var Controller_1 = require("./src/Controller");
 
 Controller_1.start();
-},{"./src/Controller":"src/Controller.ts"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./src/Controller":"src/Controller.ts"}],"../../../../usr/local/lib/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -324,7 +359,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41901" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -500,5 +535,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.ts"], null)
+},{}]},{},["../../../../usr/local/lib/node_modules/parcel/src/builtins/hmr-runtime.js","index.ts"], null)
 //# sourceMappingURL=/TODOS.77de5100.js.map
