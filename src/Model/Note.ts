@@ -1,6 +1,6 @@
 import TodoModel from "./TodoModel";
 
-enum Priority {
+export enum Priority {
   Low,
   Normal,
   High

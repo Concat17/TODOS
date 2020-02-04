@@ -1,5 +1,5 @@
 // import TodoModel from "../Model/TodoModel";
-import Note, { Todo } from "../Model/Note";
+import Note, { Todo, Priority } from "../Model/Note";
 
 export default class TodoView {
   element: HTMLElement;
@@ -31,18 +31,25 @@ export default class TodoView {
   }
 
   createNote = (data: Note): HTMLElement => {
-    const div = document.createElement("div");
-    div.className = "note";
+    const note = document.createElement("div");
+    note.className = "note";
 
     const noteName = document.createElement("div");
     noteName.className = "note_name";
     noteName.innerText = data.name;
 
+    const noteDate = document.createElement("div");
+    noteDate.className = "note_date";
+    noteDate.innerText = data.creationDate;
+
     const noteTodos = this.createTodos(data);
 
-    div.append(noteName);
-    div.append(noteTodos);
-    return div;
+    note.append(noteName);
+    note.append(noteDate);
+    note.append(noteTodos);
+
+    note.addEventListener("mousedown", this.onMouseDown);
+    return note;
   };
 
   createTodos(data: Note): HTMLElement {
@@ -54,8 +61,25 @@ export default class TodoView {
 
   todoToHtml = (todoData: Todo): HTMLElement => {
     const todo = document.createElement("div");
-    todo.className = "todo_name";
-    todo.innerText = todoData.name;
+    todo.className = "todo";
+    if (todoData.priority === Priority.Low) {
+      todo.style.backgroundColor = "yellow";
+    } else if (todoData.priority === Priority.Normal) {
+      todo.style.backgroundColor = "green";
+    } else {
+      todo.style.backgroundColor = "red";
+    }
+
+    const todoName = document.createElement("div");
+    todoName.className = "todo_name";
+    todoName.innerText = todoData.name;
+
+    const todoContent = document.createElement("div");
+    todoContent.className = "todo_content";
+    todoContent.innerText = todoData.content;
+
+    todo.append(todoName);
+    todo.append(todoContent);
     return todo;
   };
 

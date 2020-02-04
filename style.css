@@ -25,6 +25,11 @@ body{
   display: grid;
 }
 
+.todo{
+  /* background-color: aqua; */
+  border: solid 1px;
+}
+
 .todo_name{
   position: relative;
   font-weight: bold;
