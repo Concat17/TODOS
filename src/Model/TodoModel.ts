@@ -1,4 +1,4 @@
-import Note from './Note';
+import Note from "./Note";
 
 export default class TodoModel {
   notes: Note[];
@@ -9,7 +9,7 @@ export default class TodoModel {
     this.currentIndex = 0;
   }
 
-  addNote() {
+  addNote(): void {
     const note = new Note();
     note.addTodo();
     note.addTodo();

@@ -1,5 +1,5 @@
-import TodoModel from './Model/TodoModel';
-import TodoView from './View';
+import TodoModel from "./Model/TodoModel";
+import TodoView from "./View/View";
 
 const TodoController = function TodoController(todoView, todoModel) {
   this.todoView = todoView;

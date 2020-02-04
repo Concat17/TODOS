@@ -1,6 +1,6 @@
-import TodoModel from './TodoModel';
+import TodoModel from "./TodoModel";
 
-interface Todo {
+export interface Todo {
   name: string;
   content: string;
   priority: string; // TODO: rewrite as enum
