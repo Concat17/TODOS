@@ -1,5 +1,5 @@
 // import TodoModel from "../Model/TodoModel";
-import Note from "../Model/Note";
+import Note, { Todo } from "../Model/Note";
 
 export default class TodoView {
   element: HTMLElement;
@@ -13,26 +13,50 @@ export default class TodoView {
     this.onMouseDown = null;
   }
 
-  render(todoData: Note): void {
+  render(noteData: Note): void {
     // TODO: Generation todos via css grid
-    this.element.innerHTML = `<div id="click_button" class="note" data-index="1">
-      <div class="note_name">${todoData.name}</div>
-      <div class="note_todos">${this.generateTodos(todoData)}<div> 
-      </div>`;
+    // this.element.innerHTML = `<div id="click_button" class="note" data-index="1">
+    //   <div class="note_name">${noteData.name}</div>
+    //   <div class="note_todos">${this.generateTodos(noteData)}<div>
+    //   </div>`;
 
-    const clickButton: HTMLElement = this.element.querySelector(
-      "#click_button"
-    );
-    clickButton.addEventListener("click", this.onClickGetTodo);
-    clickButton.addEventListener("mousedown", this.onMouseDown);
+    // const clickButton: HTMLElement = this.element.querySelector(
+    //   "#click_button"
+    // );
+    // clickButton.addEventListener("click", this.onClickGetTodo);
+    // clickButton.addEventListener("mousedown", this.onMouseDown);
+
+    const note = this.createNote(noteData);
+    this.element.append(note);
   }
 
-  generateTodos(note: Note): string {
-    return note.todos.reduce((acc, todo) => acc + this.todoToHtml(todo), "");
+  createNote = (data: Note): HTMLElement => {
+    const div = document.createElement("div");
+    div.className = "note";
+
+    const noteName = document.createElement("div");
+    noteName.className = "note_name";
+    noteName.innerText = data.name;
+
+    const noteTodos = this.createTodos(data);
+
+    div.append(noteName);
+    div.append(noteTodos);
+    return div;
+  };
+
+  createTodos(data: Note): HTMLElement {
+    const noteTodos = document.createElement("div");
+    noteTodos.className = "note_todos";
+    data.todos.forEach(todo => noteTodos.append(this.todoToHtml(todo)));
+    return noteTodos;
   }
 
-  todoToHtml = (todo): string => {
-    return `<div class="todo_name">${todo.name}</div>`;
+  todoToHtml = (todoData: Todo): HTMLElement => {
+    const todo = document.createElement("div");
+    todo.className = "todo_name";
+    todo.innerText = todoData.name;
+    return todo;
   };
 
   MoveNote = (e): Event => {

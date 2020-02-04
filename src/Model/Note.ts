@@ -1,9 +1,15 @@
 import TodoModel from "./TodoModel";
 
+enum Priority {
+  Low,
+  Normal,
+  High
+}
+
 export interface Todo {
   name: string;
   content: string;
-  priority: string; // TODO: rewrite as enum
+  priority: Priority;
 }
 
 export default class Note {
@@ -21,7 +27,7 @@ export default class Note {
     const todo: Todo = {
       name: "Todo",
       content: "Hi",
-      priority: "Low" // TODO: rewrite as enum
+      priority: Priority.Low
     };
 
     this.todos.push(todo);
