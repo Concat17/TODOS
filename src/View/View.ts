@@ -3,14 +3,17 @@ import Note, { Todo, Priority } from "../Model/Note";
 
 export default class TodoView {
   element: HTMLElement;
+  currentEditable;
   onClickGetTodo;
   onMouseDown;
+  onClickSaveButton;
 
   constructor(element: HTMLElement) {
     this.element = element;
 
     this.onClickGetTodo = null;
     this.onMouseDown = null;
+    this.onClickSaveButton = null;
   }
 
   render(noteData: Note): void {
@@ -26,23 +29,24 @@ export default class TodoView {
     // clickButton.addEventListener("click", this.onClickGetTodo);
     // clickButton.addEventListener("mousedown", this.onMouseDown);
 
-    const note = this.createNote(noteData);
+    const note = this.placeNote(noteData);
     this.element.append(note);
   }
 
-  createNote = (data: Note): HTMLElement => {
-    const note = document.createElement("div");
+  placeNote = (noteData: Note): HTMLElement => {
+    const note = document.createElement("div"); // FIXME: Make one function "Create Element"
     note.className = "note";
+    note.id = noteData.id.toString();
 
     const noteName = document.createElement("div");
     noteName.className = "note_name";
-    noteName.innerText = data.name;
+    noteName.innerText = noteData.name;
 
     const noteDate = document.createElement("div");
     noteDate.className = "note_date";
-    noteDate.innerText = data.creationDate;
+    noteDate.innerText = noteData.creationDate;
 
-    const noteTodos = this.createTodos(data);
+    const noteTodos = this.placeTodos(noteData);
 
     note.append(noteName);
     note.append(noteDate);
@@ -52,16 +56,17 @@ export default class TodoView {
     return note;
   };
 
-  createTodos(data: Note): HTMLElement {
+  placeTodos(noteData: Note): HTMLElement {
     const noteTodos = document.createElement("div");
     noteTodos.className = "note_todos";
-    data.todos.forEach(todo => noteTodos.append(this.todoToHtml(todo)));
+    noteData.todos.forEach(todo => noteTodos.append(this.todoToHtml(todo)));
     return noteTodos;
   }
 
   todoToHtml = (todoData: Todo): HTMLElement => {
     const todo = document.createElement("div");
     todo.className = "todo";
+    todo.id = todoData.id.toString();
     if (todoData.priority === Priority.Low) {
       todo.style.backgroundColor = "yellow";
     } else if (todoData.priority === Priority.Normal) {
@@ -80,10 +85,62 @@ export default class TodoView {
 
     todo.append(todoName);
     todo.append(todoContent);
+
+    todo.addEventListener("click", this.MakeEditable);
     return todo;
   };
 
-  MoveNote = (e): Event => {
+  MakeEditable = (e: MouseEvent): void => {
+    this.RemoveEditable();
+    const todo = e.target as HTMLElement;
+
+    const editableName = document.createElement("input");
+    editableName.className = "editable_name";
+    editableName.value = todo.parentElement.firstChild.textContent;
+
+    const editableContent = document.createElement("input");
+    editableContent.className = "editable_content";
+    editableContent.value = todo.parentElement.lastChild.textContent;
+
+    const saveButton = document.createElement("button");
+    saveButton.className = "button_save";
+    saveButton.innerText = "Save";
+    saveButton.addEventListener("click", this.onClickSaveButton);
+
+    todo.parentElement.after(saveButton);
+    todo.parentElement.after(editableContent);
+    todo.parentElement.after(editableName);
+
+    this.currentEditable = todo.parentElement;
+    todo.parentElement.remove();
+  };
+
+  GetCurrentEditableId(): number {
+    return this.currentEditable.id;
+  }
+
+  GetEditableText = (className: string): string => {
+    // FIXME: Make one function
+    const editableText = document.getElementsByClassName(
+      className
+    )[0] as HTMLInputElement;
+    return editableText.value;
+  };
+
+  RemoveEditable = (): void => {
+    const editableName = document.getElementsByClassName("editable_name");
+    if (editableName.length === 0) return;
+
+    const editableContent = document.getElementsByClassName("editable_content");
+    const saveButton = document.getElementsByClassName("button_save");
+    saveButton[0].after(this.currentEditable);
+    saveButton[0].remove();
+
+    editableName[0].remove();
+    editableContent[0].remove();
+  };
+
+  MoveNote = (e: MouseEvent): void => {
     const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
     if (note.className !== "note") return;
     const shiftX = e.clientX - note.getBoundingClientRect().left;

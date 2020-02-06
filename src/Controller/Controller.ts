@@ -12,6 +12,7 @@ export default class TodoController {
 
   initialize(): void {
     this.view.onMouseDown = this.onMouseDown.bind(this);
+    this.view.onClickSaveButton = this.onClickSaveButton.bind(this);
     this.model.addNote();
     const note = this.model.getNoteData(0);
     this.showTodo(note);
@@ -19,6 +20,18 @@ export default class TodoController {
   onMouseDown(e: MouseEvent): void {
     this.view.MoveNote(e);
   }
+
+  onClickSaveButton = (): void => {
+    const editableTodoId = this.view.GetCurrentEditableId();
+    const editableNoteId = 0; // FIXME: make for several notes
+
+    const editableNoteData = this.model.getNoteData(editableNoteId);
+    const name = this.view.GetEditableText("editable_name");
+    const content = this.view.GetEditableText("editable_content");
+
+    editableNoteData.editTodo(editableTodoId, name, content);
+    this.showTodo(editableNoteData);
+  };
 
   showTodo(todoData): void {
     this.view.render(todoData);

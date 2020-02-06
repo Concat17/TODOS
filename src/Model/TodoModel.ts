@@ -3,21 +3,25 @@ import Note from "./Note";
 export default class TodoModel {
   notes: Note[];
   currentIndex: number;
+  lastNoteId: number;
 
   constructor() {
     this.notes = [];
     this.currentIndex = 0;
+    this.lastNoteId = 0;
   }
 
   addNote(): void {
-    const note = new Note();
+    const note = new Note(this.lastNoteId);
     note.addTodo();
     note.addTodo();
     note.addTodo();
     this.notes.push(note);
+
+    this.lastNoteId += 1;
   }
 
-  getNoteData(index: number): object {
+  getNoteData(index: number): Note {
     return this.notes[index];
   }
 
