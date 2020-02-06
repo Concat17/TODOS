@@ -3,7 +3,7 @@ import Note, { Todo, Priority } from "../Model/Note";
 
 export default class TodoView {
   element: HTMLElement;
-  currentEditable;
+  editable;
   onClickGetTodo;
   onMouseDown;
   onClickSaveButton;
@@ -33,17 +33,20 @@ export default class TodoView {
     this.element.append(note);
   }
 
+  createElementSetClass = (tagName: string, className: string): HTMLElement => {
+    const element = document.createElement(tagName);
+    element.className = className;
+    return element;
+  };
+
   placeNote = (noteData: Note): HTMLElement => {
-    const note = document.createElement("div"); // FIXME: Make one function "Create Element"
-    note.className = "note";
+    const note = this.createElementSetClass("div", "note");
     note.id = noteData.id.toString();
 
-    const noteName = document.createElement("div");
-    noteName.className = "note_name";
+    const noteName = this.createElementSetClass("div", "note_name");
     noteName.innerText = noteData.name;
 
-    const noteDate = document.createElement("div");
-    noteDate.className = "note_date";
+    const noteDate = this.createElementSetClass("div", "note_date");
     noteDate.innerText = noteData.creationDate;
 
     const noteTodos = this.placeTodos(noteData);
@@ -57,16 +60,15 @@ export default class TodoView {
   };
 
   placeTodos(noteData: Note): HTMLElement {
-    const noteTodos = document.createElement("div");
-    noteTodos.className = "note_todos";
+    const noteTodos = this.createElementSetClass("div", "note_todos");
     noteData.todos.forEach(todo => noteTodos.append(this.todoToHtml(todo)));
     return noteTodos;
   }
 
   todoToHtml = (todoData: Todo): HTMLElement => {
-    const todo = document.createElement("div");
-    todo.className = "todo";
+    const todo = this.createElementSetClass("div", "todo");
     todo.id = todoData.id.toString();
+
     if (todoData.priority === Priority.Low) {
       todo.style.backgroundColor = "yellow";
     } else if (todoData.priority === Priority.Normal) {
@@ -75,12 +77,10 @@ export default class TodoView {
       todo.style.backgroundColor = "red";
     }
 
-    const todoName = document.createElement("div");
-    todoName.className = "todo_name";
+    const todoName = this.createElementSetClass("div", "todo_name");
     todoName.innerText = todoData.name;
 
-    const todoContent = document.createElement("div");
-    todoContent.className = "todo_content";
+    const todoContent = this.createElementSetClass("div", "todo_content");
     todoContent.innerText = todoData.content;
 
     todo.append(todoName);
@@ -91,19 +91,24 @@ export default class TodoView {
   };
 
   MakeEditable = (e: MouseEvent): void => {
+    // only one editable todo at time
     this.RemoveEditable();
+
     const todo = e.target as HTMLElement;
 
-    const editableName = document.createElement("input");
-    editableName.className = "editable_name";
+    const editableName = this.createElementSetClass(
+      "input",
+      "editable_name"
+    ) as HTMLInputElement;
     editableName.value = todo.parentElement.firstChild.textContent;
 
-    const editableContent = document.createElement("input");
-    editableContent.className = "editable_content";
+    const editableContent = this.createElementSetClass(
+      "input",
+      "editable_content"
+    ) as HTMLInputElement;
     editableContent.value = todo.parentElement.lastChild.textContent;
 
-    const saveButton = document.createElement("button");
-    saveButton.className = "button_save";
+    const saveButton = this.createElementSetClass("button", "button_save");
     saveButton.innerText = "Save";
     saveButton.addEventListener("click", this.onClickSaveButton);
 
@@ -111,16 +116,15 @@ export default class TodoView {
     todo.parentElement.after(editableContent);
     todo.parentElement.after(editableName);
 
-    this.currentEditable = todo.parentElement;
+    this.editable = todo.parentElement;
     todo.parentElement.remove();
   };
 
-  GetCurrentEditableId(): number {
-    return this.currentEditable.id;
+  GetEditableId(): number {
+    return this.editable.id;
   }
 
   GetEditableText = (className: string): string => {
-    // FIXME: Make one function
     const editableText = document.getElementsByClassName(
       className
     )[0] as HTMLInputElement;
@@ -133,9 +137,9 @@ export default class TodoView {
 
     const editableContent = document.getElementsByClassName("editable_content");
     const saveButton = document.getElementsByClassName("button_save");
-    saveButton[0].after(this.currentEditable);
-    saveButton[0].remove();
+    saveButton[0].after(this.editable);
 
+    saveButton[0].remove();
     editableName[0].remove();
     editableContent[0].remove();
   };

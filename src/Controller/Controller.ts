@@ -21,9 +21,10 @@ export default class TodoController {
     this.view.MoveNote(e);
   }
 
-  onClickSaveButton = (): void => {
-    const editableTodoId = this.view.GetCurrentEditableId();
-    const editableNoteId = 0; // FIXME: make for several notes
+  onClickSaveButton = (e: MouseEvent): void => {
+    const editableTodoId = this.view.GetEditableId();
+    const target = e.currentTarget as HTMLElement;
+    const editableNoteId = parseInt(target.parentElement.parentElement.id, 10);
 
     const editableNoteData = this.model.getNoteData(editableNoteId);
     const name = this.view.GetEditableText("editable_name");
