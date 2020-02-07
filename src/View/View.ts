@@ -80,8 +80,8 @@ export default class TodoView {
     const todoName = this.createElementSetClass("div", "todo_name");
     todoName.innerText = todoData.name;
 
-    const todoContent = this.createElementSetClass("div", "todo_content");
-    todoContent.innerText = todoData.content;
+    const todoContent = this.createElementSetClass("p", "todo_content");
+    todoContent.innerHTML = todoData.content;
 
     todo.append(todoName);
     todo.append(todoContent);

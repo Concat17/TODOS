@@ -1,10 +1,10 @@
 body{
   background-color: #333;
-}
+} 
   
 .note {
   position: absolute;
-  width: 10%;
+  width: 150px;
   height: 30%;
   background: rgb(240, 239, 180);
   border-radius: 10%;
@@ -22,22 +22,28 @@ body{
 }
 
 .note_todos{
-  display: grid;
+  display: grid; 
 }
 
-.todo{
-  /* background-color: aqua; */
-  border: solid 1px;
+.todo{ 
+  display: grid;  
+  border: solid 1px; 
 }
 
-.todo_name{
+.todo_name{ 
   position: relative;
   font-weight: bold;
-  text-align: center;
-  height: 10%;  
+  text-align: center; 
+  /* width: 95%; */ 
+}
+.todo_content{  
+  margin-top: 0%;
+  margin-bottom: 0%;
+  min-width: 100%;
+  word-wrap: break-word; 
 }
 
+
 .editable_name, .editable_content{
-  width: 98% 
-  
+  width: 98%  
 }
