@@ -25,12 +25,17 @@ export default class TodoController {
     const editableTodoId = this.view.GetEditableId();
     const target = e.currentTarget as HTMLElement;
     const editableNoteId = parseInt(target.parentElement.parentElement.id, 10);
-
     const editableNoteData = this.model.getNoteData(editableNoteId);
     const name = this.view.GetEditableText("editable_name");
     const content = this.view.GetEditableText("editable_content");
+    if (editableTodoId === "") {
+      editableNoteData.addTodo();
 
-    editableNoteData.editTodo(editableTodoId, name, content);
+      editableNoteData.editTodo(editableNoteData.lastTodoId - 1, name, content);
+    } else {
+      editableNoteData.editTodo(parseInt(editableTodoId, 10), name, content);
+    }
+
     this.showTodo(editableNoteData);
   };
 

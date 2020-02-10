@@ -22,10 +22,11 @@ body{
 }
 
 .note_todos{
-  display: grid; 
+  display: grid;
+  margin-bottom: 10px; 
 }
 
-.todo{ 
+.todo, .add_todo{ 
   display: grid;  
   border: solid 1px; 
 }

@@ -15,7 +15,6 @@ export default class TodoModel {
     const note = new Note(this.lastNoteId);
     note.addTodo();
     note.addTodo();
-    note.addTodo();
     this.notes.push(note);
 
     this.lastNoteId += 1;
