@@ -1,5 +1,6 @@
 // import TodoModel from "../Model/TodoModel";
-import Note, { Priority, Todo } from '../Model/Note';
+import Note, { Priority, Todo } from "../Model/Note";
+import ViewNote from "./components/ViewNote";
 
 export default class TodoView {
   element: HTMLElement;
@@ -17,8 +18,9 @@ export default class TodoView {
   }
 
   render(noteData: Note): void {
-    const note = this.placeNote(noteData);
-    this.element.append(note);
+    // const note = this.placeNote(noteData);
+    const note = new ViewNote(noteData);
+    this.element.append(note.render());
   }
 
   createElementAndSetClass = (
