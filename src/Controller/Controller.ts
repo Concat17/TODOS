@@ -1,5 +1,5 @@
-import TodoModel from "../Model/TodoModel";
-import TodoView from "../View/View";
+import TodoModel from '../Model/TodoModel';
+import TodoView from '../View/View';
 
 export default class TodoController {
   model: TodoModel;
@@ -17,6 +17,7 @@ export default class TodoController {
     const note = this.model.getNoteData(0);
     this.showTodo(note);
   }
+
   onMouseDown(e: MouseEvent): void {
     this.view.MoveNote(e);
   }

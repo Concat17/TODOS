@@ -1,5 +1,5 @@
 // import TodoModel from "../Model/TodoModel";
-import Note, { Todo, Priority } from "../Model/Note";
+import Note, { Priority, Todo } from '../Model/Note';
 
 export default class TodoView {
   element: HTMLElement;
@@ -158,7 +158,7 @@ export default class TodoView {
     this.MakeEditable(e);
   };
 
-  SqueezeAddButton = (): void => {};
+  // SqueezeAddButton = (): void => {};
 
   MoveNote = (e: MouseEvent): void => {
     const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
