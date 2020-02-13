@@ -20,7 +20,14 @@ export default class TodoView {
   render(noteData: Note): void {
     // const note = this.placeNote(noteData);
     const note = new ViewNote(noteData);
-    this.element.append(note.render());
+    const renderedNote = note.render();
+    const todosCollection = renderedNote.getElementsByClassName("todo");
+    const todosArray = [...todosCollection];
+    todosArray.forEach(todo =>
+      todo.addEventListener("click", this.MakeEditable)
+    );
+
+    this.element.append(renderedNote);
   }
 
   createElementAndSetClass = (

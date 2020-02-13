@@ -13,6 +13,7 @@ export default class ViewTodo implements Component {
   render(): HTMLElement {
     const element = document.createElement("div");
     element.className = "todo";
+    element.id = this.todoData.id.toString();
     element.style.backgroundColor = this.SetTodoColor(this.todoData.priority);
 
     const todoNameElement = new ViewTodoName(this.todoData.name);

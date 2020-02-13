@@ -1,5 +1,5 @@
-import TodoModel from '../Model/TodoModel';
-import TodoView from '../View/View';
+import TodoModel from "../Model/TodoModel";
+import TodoView from "../View/View";
 
 export default class TodoController {
   model: TodoModel;
@@ -31,7 +31,6 @@ export default class TodoController {
     const content = this.view.GetEditableText("editable_content");
     if (editableTodoId === "") {
       editableNoteData.addTodo();
-
       editableNoteData.editTodo(editableNoteData.lastTodoId - 1, name, content);
     } else {
       editableNoteData.editTodo(parseInt(editableTodoId, 10), name, content);
