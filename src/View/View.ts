@@ -26,6 +26,8 @@ export default class TodoView {
     todosArray.forEach(todo =>
       todo.addEventListener("click", this.MakeEditable)
     );
+    const todoAddButton = renderedNote.getElementsByClassName("add_todo")[0];
+    todoAddButton.addEventListener("click", this.MakeEditable);
 
     this.element.append(renderedNote);
   }

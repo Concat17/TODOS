@@ -1,6 +1,7 @@
 import { Component } from "../Component";
 import { Todo } from "../../Model/Note";
 import ViewTodo from "./ViewTodo";
+import ViewTodoAddButton from "./ViewTodoAddButton";
 
 export default class ViewNoteTodos implements Component {
   noteTodos: Todo[];
@@ -14,6 +15,9 @@ export default class ViewNoteTodos implements Component {
     element.className = "note_todos";
 
     this.noteTodos.forEach(todo => element.append(new ViewTodo(todo).render()));
+
+    const addButton = new ViewTodoAddButton();
+    element.append(addButton.render());
 
     return element;
   }
