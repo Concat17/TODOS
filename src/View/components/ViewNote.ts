@@ -1,10 +1,10 @@
 import { Component } from "../Component";
 import ViewNoteName from "./ViewNoteName";
 import ViewNoteDate from "./ViewNoteDate";
+import ViewNoteTodos from "./ViewNoteTodos";
 import Note from "../../Model/Note";
 
 export default class ViewNote implements Component {
-  myImportantData = "nani?";
   noteData: Note;
 
   constructor(noteData: Note) {
@@ -21,6 +21,9 @@ export default class ViewNote implements Component {
 
     const noteDate = new ViewNoteDate(this.noteData.creationDate);
     element.append(noteDate.render());
+
+    const noteTodos = new ViewNoteTodos(this.noteData.todos);
+    element.append(noteTodos.render());
 
     return element;
   }
