@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import { Component } from "../Component";
 import ViewNoteName from "./ViewNoteName";
 import ViewNoteDate from "./ViewNoteDate";
 import ViewNoteTodos from "./ViewNoteTodos";
 import Note from "../../Model/Note";
+=======
+import Note from '../../Model/Note';
+import { Component } from '../Component';
+import ViewNoteDate from './ViewNoteDate';
+import ViewNoteName from './ViewNoteName';
+>>>>>>> 00eff420891df522eaadde6dbf1d417c525d91e6
 
 export default class ViewNote implements Component {
   noteData: Note;
@@ -16,11 +23,11 @@ export default class ViewNote implements Component {
     element.className = "note";
     // element.textContent = this.myImportantData;
 
-    const noteName = new ViewNoteName(this.noteData.name);
-    element.append(noteName.render());
+    const noteNameElement = new ViewNoteName(this.noteData.name);
+    element.append(noteNameElement.render());
 
-    const noteDate = new ViewNoteDate(this.noteData.creationDate);
-    element.append(noteDate.render());
+    const noteDateElement = new ViewNoteDate(this.noteData.creationDate);
+    element.append(noteDateElement.render());
 
     const noteTodos = new ViewNoteTodos(this.noteData.todos);
     element.append(noteTodos.render());
