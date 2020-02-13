@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-import { Component } from "../Component";
-import ViewNoteName from "./ViewNoteName";
-import ViewNoteDate from "./ViewNoteDate";
-import ViewNoteTodos from "./ViewNoteTodos";
 import Note from "../../Model/Note";
-=======
-import Note from '../../Model/Note';
-import { Component } from '../Component';
-import ViewNoteDate from './ViewNoteDate';
-import ViewNoteName from './ViewNoteName';
->>>>>>> 00eff420891df522eaadde6dbf1d417c525d91e6
+import { Component } from "../Component";
+import ViewNoteDate from "./ViewNoteDate";
+import ViewNoteName from "./ViewNoteName";
 
 export default class ViewNote implements Component {
   noteData: Note;
