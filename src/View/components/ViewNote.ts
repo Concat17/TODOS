@@ -1,7 +1,7 @@
-import { Component } from "../Component";
-import ViewNoteName from "./ViewNoteName";
-import ViewNoteDate from "./ViewNoteDate";
-import Note from "../../Model/Note";
+import Note from '../../Model/Note';
+import { Component } from '../Component';
+import ViewNoteDate from './ViewNoteDate';
+import ViewNoteName from './ViewNoteName';
 
 export default class ViewNote implements Component {
   myImportantData = "nani?";
@@ -16,11 +16,11 @@ export default class ViewNote implements Component {
     element.className = "note";
     // element.textContent = this.myImportantData;
 
-    const noteName = new ViewNoteName(this.noteData.name);
-    element.append(noteName.render());
+    const noteNameElement = new ViewNoteName(this.noteData.name);
+    element.append(noteNameElement.render());
 
-    const noteDate = new ViewNoteDate(this.noteData.creationDate);
-    element.append(noteDate.render());
+    const noteDateElement = new ViewNoteDate(this.noteData.creationDate);
+    element.append(noteDateElement.render());
 
     return element;
   }
