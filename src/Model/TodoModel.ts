@@ -24,6 +24,10 @@ export default class TodoModel {
     return this.notes[index];
   }
 
+  getNotes(): Note[] {
+    return this.notes;
+  }
+
   // this method doesn't use this so it must me static (or global - it's prefered)
   static getCurrentDate(): string {
     const today = new Date();

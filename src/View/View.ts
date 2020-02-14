@@ -17,8 +17,11 @@ export default class TodoView {
     this.onClickSaveButton = null;
   }
 
-  render(noteData: Note): void {
-    // const note = this.placeNote(noteData);
+  render(notesData: Note[]): void {
+    notesData.forEach(note => this.renderNote(note));
+  }
+
+  renderNote(noteData: Note): void {
     const note = new ViewNote(noteData);
     const renderedNote = note.render();
     const todosCollection = renderedNote.getElementsByClassName("todo");

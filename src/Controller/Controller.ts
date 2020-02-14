@@ -1,5 +1,6 @@
 import TodoModel from "../Model/TodoModel";
 import TodoView from "../View/View";
+import Note from "../Model/Note";
 
 export default class TodoController {
   model: TodoModel;
@@ -14,8 +15,7 @@ export default class TodoController {
     this.view.onMouseDown = this.onMouseDown.bind(this);
     this.view.onClickSaveButton = this.onClickSaveButton.bind(this);
     this.model.addNote();
-    const note = this.model.getNoteData(0);
-    this.showTodo(note);
+    this.showNotes(this.model.notes);
   }
 
   onMouseDown(e: MouseEvent): void {
@@ -36,11 +36,11 @@ export default class TodoController {
       editableNoteData.editTodo(parseInt(editableTodoId, 10), name, content);
     }
 
-    this.showTodo(editableNoteData);
+    this.showNotes(this.model.notes);
   };
 
-  showTodo(todoData): void {
-    this.view.render(todoData);
+  showNotes(notesData: Note[]): void {
+    this.view.render(notesData);
   }
 
   static start = (): void => {
