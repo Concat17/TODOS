@@ -31,9 +31,20 @@ export default class TodoView {
     );
     const todoAddButton = renderedNote.getElementsByClassName("add_todo")[0];
     todoAddButton.addEventListener("click", this.MakeEditable);
+    renderedNote.addEventListener("mousedown", this.MoveNote);
 
-    this.element.append(renderedNote);
+    const place = document.getElementById(`note_place_${noteData.id}`);
+    place.childNodes.forEach(elem => elem.remove());
+    place.append(renderedNote);
+    // this.element.append(renderedNote);
   }
+
+  addNotePlace = (id: string): void => {
+    const notePlace = document.createElement("div");
+    notePlace.className = "note_place";
+    notePlace.id = `note_place_${id}`;
+    document.body.appendChild(notePlace);
+  };
 
   createElementAndSetClass = (
     tagName: string,
@@ -175,13 +186,16 @@ export default class TodoView {
   // SqueezeAddButton = (): void => {};
 
   MoveNote = (e: MouseEvent): void => {
-    const note = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-    if (note.className !== "note") return;
+    const clickedElement = document.elementFromPoint(
+      e.clientX,
+      e.clientY
+    ) as HTMLElement;
+    const note = clickedElement.closest(".note_place") as HTMLElement;
+
     const shiftX = e.clientX - note.getBoundingClientRect().left;
     const shiftY = e.clientY - note.getBoundingClientRect().top;
     note.style.position = "absolute";
     note.style.zIndex = "1000";
-    document.body.append(note);
 
     function moveAt(pageX: number, pageY: number): void {
       note.style.left = `${pageX - shiftX}px`;
@@ -196,6 +210,7 @@ export default class TodoView {
 
     note.onmouseup = function onMouseUp(): void {
       document.removeEventListener("mousemove", onMouseMove);
+      note.style.zIndex = "1";
       note.onmouseup = null;
     };
   };

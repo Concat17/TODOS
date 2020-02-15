@@ -8,24 +8,27 @@ export default class TodoModel {
   constructor() {
     this.notes = [];
     this.currentIndex = 0;
-    this.lastNoteId = 0;
+    this.lastNoteId = -1;
   }
 
   addNote(): void {
+    this.lastNoteId += 1;
     const note = new Note(this.lastNoteId);
     note.addTodo();
     note.addTodo();
     this.notes.push(note);
-
-    this.lastNoteId += 1;
   }
-
+  // TODO: Rewrite as properties
   getNoteData(index: number): Note {
     return this.notes[index];
   }
 
   getNotes(): Note[] {
     return this.notes;
+  }
+
+  getLastNoteId(): number {
+    return this.lastNoteId;
   }
 
   // this method doesn't use this so it must me static (or global - it's prefered)

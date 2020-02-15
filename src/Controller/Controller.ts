@@ -14,8 +14,8 @@ export default class TodoController {
   initialize(): void {
     this.view.onMouseDown = this.onMouseDown.bind(this);
     this.view.onClickSaveButton = this.onClickSaveButton.bind(this);
-    this.model.addNote();
-    this.showNotes(this.model.notes);
+    this.addNote();
+    document.addEventListener("click", this.onClickEmptyArea);
   }
 
   onMouseDown(e: MouseEvent): void {
@@ -39,6 +39,16 @@ export default class TodoController {
     this.showNotes(this.model.notes);
   };
 
+  onClickEmptyArea = (e: MouseEvent): void => {
+    const t = e.target as HTMLElement;
+    if (t.nodeName === "HTML") {
+      const isAddNewNote = confirm("Create new node?");
+      if (isAddNewNote) {
+        this.addNote();
+      }
+    }
+  };
+
   showNotes(notesData: Note[]): void {
     this.view.render(notesData);
   }
@@ -53,4 +63,11 @@ export default class TodoController {
 
     controller.initialize();
   };
+
+  addNote(): void {
+    this.model.addNote();
+    const lastNoteId = this.model.getLastNoteId();
+    this.view.addNotePlace(lastNoteId.toString());
+    this.showNotes(this.model.notes);
+  }
 }
