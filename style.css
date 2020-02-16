@@ -27,6 +27,12 @@ body{
   border: solid 1px;
 }
 
+.note_date{
+  position: relative; 
+  height: 10%; 
+  border: solid 1px;
+}
+
 .note_todos{
   display: grid;
   margin-bottom: 10px; 

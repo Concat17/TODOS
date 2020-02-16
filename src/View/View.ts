@@ -1,5 +1,5 @@
 // import TodoModel from "../Model/TodoModel";
-import Note, { Priority, Todo } from "../Model/Note";
+import Note from "../Model/Note";
 import ViewNote from "./components/ViewNote";
 
 export default class TodoView {
@@ -26,6 +26,7 @@ export default class TodoView {
     const renderedNote = note.render();
     const todosCollection = renderedNote.getElementsByClassName("todo");
     const todosArray = [...todosCollection];
+
     todosArray.forEach(todo =>
       todo.addEventListener("click", this.MakeEditable)
     );
@@ -33,10 +34,9 @@ export default class TodoView {
     todoAddButton.addEventListener("click", this.MakeEditable);
     renderedNote.addEventListener("mousedown", this.MoveNote);
 
-    const place = document.getElementById(`note_place_${noteData.id}`);
+    const place = document.getElementById(`note_place_${renderedNote.id}`);
     place.childNodes.forEach(elem => elem.remove());
     place.append(renderedNote);
-    // this.element.append(renderedNote);
   }
 
   addNotePlace = (id: string): void => {
@@ -53,60 +53,6 @@ export default class TodoView {
     const element = document.createElement(tagName);
     element.className = className;
     return element;
-  };
-
-  placeNote = (noteData: Note): HTMLElement => {
-    const note = this.createElementAndSetClass("div", "note");
-    note.id = noteData.id.toString();
-
-    const noteName = this.createElementAndSetClass("div", "note_name");
-    noteName.innerText = noteData.name;
-
-    const noteDate = this.createElementAndSetClass("div", "note_date");
-    noteDate.innerText = noteData.creationDate;
-
-    const noteTodos = this.placeTodos(noteData);
-
-    const addTodo = this.PlaceAddTodoButton();
-    noteTodos.append(addTodo);
-
-    note.append(noteName);
-    note.append(noteDate);
-    note.append(noteTodos);
-
-    note.addEventListener("mousedown", this.onMouseDown);
-    return note;
-  };
-
-  placeTodos(noteData: Note): HTMLElement {
-    const noteTodos = this.createElementAndSetClass("div", "note_todos");
-    noteData.todos.forEach(todo => noteTodos.append(this.todoToHtml(todo)));
-    return noteTodos;
-  }
-
-  todoToHtml = (todoData: Todo): HTMLElement => {
-    const todo = this.createElementAndSetClass("div", "todo");
-    todo.id = todoData.id.toString();
-
-    if (todoData.priority === Priority.Low) {
-      todo.style.backgroundColor = "yellow";
-    } else if (todoData.priority === Priority.Normal) {
-      todo.style.backgroundColor = "green";
-    } else {
-      todo.style.backgroundColor = "red";
-    }
-
-    const todoName = this.createElementAndSetClass("div", "todo_name");
-    todoName.innerText = todoData.name;
-
-    const todoContent = this.createElementAndSetClass("p", "todo_content");
-    todoContent.innerHTML = todoData.content;
-
-    todo.append(todoName);
-    todo.append(todoContent);
-
-    todo.addEventListener("click", this.MakeEditable);
-    return todo;
   };
 
   MakeEditable = (e: MouseEvent): void => {
@@ -162,28 +108,6 @@ export default class TodoView {
     editableName[0].remove();
     editableContent[0].remove();
   };
-
-  PlaceAddTodoButton = (): HTMLElement => {
-    const addTodo = this.createElementAndSetClass("div", "todo");
-
-    const todoContent = this.createElementAndSetClass("p", "todo_content");
-    todoContent.innerHTML = "+";
-
-    addTodo.append(todoContent);
-    addTodo.addEventListener("click", this.MakeEditable);
-    return addTodo;
-  };
-
-  // TODO: Set text to new todo and fix bug then click another todo without saving
-  ExpandAddButton = (e: MouseEvent): void => {
-    const button = e.currentTarget as HTMLElement;
-    const todoName = this.createElementAndSetClass("div", "todo_name");
-    todoName.innerText = "New todo";
-    button.prepend(todoName);
-    this.MakeEditable(e);
-  };
-
-  // SqueezeAddButton = (): void => {};
 
   MoveNote = (e: MouseEvent): void => {
     const clickedElement = document.elementFromPoint(

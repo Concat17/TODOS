@@ -15,7 +15,6 @@ export default class ViewNote implements Component {
     const element = document.createElement("div");
     element.className = "note";
     element.id = this.noteData.id.toString();
-    // element.textContent = this.myImportantData;
 
     const noteNameElement = new ViewNoteName(this.noteData.name);
     element.append(noteNameElement.render());

@@ -10,9 +10,7 @@ export default class ViewNoteName implements Component {
   render(): HTMLElement {
     const element = document.createElement("div");
     element.className = "note_name";
-
     element.textContent = this.noteName;
-
     return element;
   }
 }

@@ -18,7 +18,7 @@ export default class TodoModel {
     note.addTodo();
     this.notes.push(note);
   }
-  // TODO: Rewrite as properties
+
   getNoteData(index: number): Note {
     return this.notes[index];
   }

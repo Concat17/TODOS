@@ -10,9 +10,7 @@ export default class ViewTodoContent implements Component {
   render(): HTMLElement {
     const element = document.createElement("div");
     element.className = "todo_content";
-
     element.textContent = this.noteContent;
-
     return element;
   }
 }
